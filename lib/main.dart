@@ -1,6 +1,7 @@
+import 'package:eco/Screens/home.dart';
 import 'package:flutter/material.dart';
 
-import 'Screens/fortgot_Pass.dart';
+import 'Screens/forgot_Pass.dart';
 import 'Screens/login.dart';
 import 'Screens/signup.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ForgotPassword(),
+      home: const Home(),
     );
   }
 }
