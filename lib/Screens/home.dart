@@ -12,7 +12,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _currentNav = 0;
-
+  List<String> newCategory = [
+    "Tops",
+    "Shirts & Blouses",
+    "Cardigans & Sweaters",
+    "Knitwear",
+    "Blazers",
+    "Outerwear",
+    "Pants",
+    "Jeans",
+    "Shorts",
+    "Skirts",
+    "Dresses"
+  ];
+  int categoryPageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +35,7 @@ class _HomeState extends State<Home> {
         child: _currentNav == 0
             ? myHome()
             : _currentNav == 1
-                ? myShop()
+                ? categoryPage()
                 : _currentNav == 2
                     ? myBag()
                     : _currentNav == 3
@@ -30,6 +43,10 @@ class _HomeState extends State<Home> {
                         : myProfile(),
       ),
     );
+  }
+
+  Widget categoryPage() {
+    return categoryPageIndex == 0 ? myShop() : chooseCategory(newCategory);
   }
 
   Widget myShop() {
@@ -307,7 +324,11 @@ class _HomeState extends State<Home> {
           height: 20,
         ),
         InkWell(
-          onTap: () {},
+          onTap: () {
+            setState(() {
+              categoryPageIndex = 1;
+            });
+          },
           child: const Categories(
             image: "assets/images/new categories.jpg",
             title: "New",
@@ -345,5 +366,80 @@ class _HomeState extends State<Home> {
         ),
       ]),
     );
+  }
+
+  Widget chooseCategory(List categories) {
+    return Scaffold(
+        appBar: AppBar(
+          leading: InkWell(
+            onTap: () {
+              setState(() {
+                categoryPageIndex = 0;
+              });
+            },
+            child: Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.black,
+            ),
+          ),
+          backgroundColor: Colors.white,
+          title: const Text(
+            "Categories",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            minimumSize: const Size.fromHeight(55),
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 17, 0)),
+                        onPressed: () {},
+                        child: const Text(
+                          "VIEW ALL ITEMS",
+                          style: TextStyle(color: Colors.white, fontSize: 17),
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      "Choose category",
+                      style: TextStyle(color: Colors.black38),
+                    )
+                  ]),
+            ),
+            SizedBox(
+              height: 650,
+              child: ListView.separated(
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    contentPadding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                    title: Text(categories[index]),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    color: Colors.black26,
+                    height: 10,
+                  );
+                },
+              ),
+            )
+          ],
+        ));
   }
 }
