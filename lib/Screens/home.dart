@@ -1,6 +1,11 @@
 import 'package:eco/components/categories.dart';
-import 'package:flutter/material.dart';
+import 'package:eco/components/productTwo.dart';
+import 'package:eco/data.dart';
 
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
+import '../components/categoryName.dart';
 import '../components/product.dart';
 
 class Home extends StatefulWidget {
@@ -11,42 +16,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _currentNav = 0;
-  List<String> newCategory = [
-    "Tops",
-    "Shirts & Blouses",
-    "Cardigans & Sweaters",
-    "Knitwear",
-    "Blazers",
-    "Outerwear",
-    "Pants",
-    "Jeans",
-    "Shorts",
-    "Skirts",
-    "Dresses"
-  ];
-  int categoryPageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: bottomBar(),
       body: Container(
         alignment: Alignment.topLeft,
-        child: _currentNav == 0
+        child: currentNav == 0
             ? myHome()
-            : _currentNav == 1
-                ? categoryPage()
-                : _currentNav == 2
+            : currentNav == 1
+                ? categoryPage(title: categoryPageTitle)
+                : currentNav == 2
                     ? myBag()
-                    : _currentNav == 3
+                    : currentNav == 3
                         ? myFavorites()
                         : myProfile(),
       ),
     );
   }
 
-  Widget categoryPage() {
-    return categoryPageIndex == 0 ? myShop() : chooseCategory(newCategory);
+  Widget categoryPage({String? title}) {
+    return categoryPageIndex == 0
+        ? myShop()
+        : categoryPageIndex == 1
+            ? chooseCategory(newCategory)
+            : categoryItems();
   }
 
   Widget myShop() {
@@ -246,7 +240,7 @@ class _HomeState extends State<Home> {
       child: BottomNavigationBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        currentIndex: _currentNav,
+        currentIndex: currentNav,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color.fromARGB(255, 255, 17, 0),
         unselectedItemColor: Colors.black26,
@@ -284,7 +278,7 @@ class _HomeState extends State<Home> {
         ],
         onTap: (value) {
           setState(() {
-            _currentNav = value;
+            currentNav = value;
           });
         },
       ),
@@ -368,7 +362,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget chooseCategory(List categories) {
+  Widget chooseCategory(List<String> categories) {
     return Scaffold(
         appBar: AppBar(
           leading: InkWell(
@@ -377,7 +371,7 @@ class _HomeState extends State<Home> {
                 categoryPageIndex = 0;
               });
             },
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios_new,
               color: Colors.black,
             ),
@@ -426,9 +420,12 @@ class _HomeState extends State<Home> {
               child: ListView.separated(
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    contentPadding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                    title: Text(categories[index]),
+                  return CategoryName(
+                    set: () {
+                      setState(() {});
+                    },
+                    categories: categories,
+                    index: index,
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -441,5 +438,376 @@ class _HomeState extends State<Home> {
             )
           ],
         ));
+  }
+
+  Widget categoryItemsAppBar(bool check) {
+    return check == false
+        ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Text(
+                categoryPageTitle,
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 45),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 40,
+              child: ListView(scrollDirection: Axis.horizontal, children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "T-shirts",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "Crop tops",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "Sleeveless",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "Shirts",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ]),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: const Row(
+                      children: [
+                        Icon(Icons.filter_list),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Filters")
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Transform.rotate(
+                          angle: 90 * math.pi / 180,
+                          child: const Icon(
+                            Icons.compare_arrows,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text("Filters")
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                      onTap: () {
+                        setState(() {
+                          isItGride = !isItGride;
+                        });
+                      },
+                      child: Icon(Icons.grid_view_outlined))
+                ],
+              ),
+            )
+          ])
+        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 40,
+              child: ListView(scrollDirection: Axis.horizontal, children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "T-shirts",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "Crop tops",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "Sleeveless",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Colors.black),
+                  child: const Text(
+                    "Shirts",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ]),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: const Row(
+                      children: [
+                        Icon(Icons.filter_list),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Filters")
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Transform.rotate(
+                          angle: 90 * math.pi / 180,
+                          child: const Icon(
+                            Icons.compare_arrows,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text("Filters")
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                      onTap: () {
+                        setState(() {
+                          isItGride = !isItGride;
+                        });
+                      },
+                      child: const Icon(Icons.list))
+                ],
+              ),
+            )
+          ]);
+  }
+
+  Widget categoryItemsInGrid() {
+    return SizedBox(
+        height: 619.6,
+        child: GridView(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisExtent: 351, crossAxisCount: 2, crossAxisSpacing: 20),
+          children: const [
+            Product(
+                image: "assets/images/style1.jpg",
+                style: "Evening Dress",
+                backColor: Colors.red,
+                discountFrom: 15,
+                name: "Dorthy Perkins",
+                price: 12,
+                rate: 10,
+                stat: "-20%"),
+            Product(
+                image: "assets/images/style1.jpg",
+                style: "Evening Dress",
+                backColor: Colors.red,
+                discountFrom: 15,
+                name: "Dorthy Perkins",
+                price: 12,
+                rate: 10,
+                stat: "-20%"),
+            Product(
+                image: "assets/images/style1.jpg",
+                style: "Evening Dress",
+                backColor: Colors.red,
+                discountFrom: 15,
+                name: "Dorthy Perkins",
+                price: 12,
+                rate: 10,
+                stat: "-20%"),
+            Product(
+                image: "assets/images/style1.jpg",
+                style: "Evening Dress",
+                backColor: Colors.red,
+                discountFrom: 15,
+                name: "Dorthy Perkins",
+                price: 12,
+                rate: 10,
+                stat: "-20%"),
+          ],
+        ));
+  }
+
+  Widget categoryItemsInList() {
+    return SizedBox(
+      height: 561.6,
+      child: ListView(children: const [
+        ProductTwo(
+          image: "assets/images/pullover.jpg",
+          name: "Pullover",
+          company: "Mango",
+          rate: 10,
+          price: 50,
+        ),
+        SizedBox(
+          height: 40,
+        ),
+        ProductTwo(
+          image: "assets/images/blouse.jpg",
+          name: "Blouse",
+          company: "Dorothy Perkins",
+          rate: 0,
+          price: 34,
+        ),
+        SizedBox(
+          height: 40,
+        ),
+        ProductTwo(
+          image: "assets/images/t-shirt.jpg",
+          name: "T-shirt",
+          company: "LOST Ink",
+          rate: 10,
+          price: 12,
+        ),
+        SizedBox(
+          height: 40,
+        ),
+        ProductTwo(
+          image: "assets/images/shirt.jpg",
+          name: "Shirt",
+          company: "Topshop",
+          rate: 3,
+          price: 51,
+        ),
+        SizedBox(
+          height: 40,
+        ),
+      ]),
+    );
+  }
+
+  Widget categoryItems() {
+    return Scaffold(
+      appBar: AppBar(
+        leading: InkWell(
+          onTap: () {
+            setState(() {
+              categoryPageIndex = 1;
+            });
+          },
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: isItGride == true
+            ? Text(
+                categoryPageTitle,
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              )
+            : null,
+      ),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+            width: double.infinity,
+            decoration: const BoxDecoration(color: Colors.white),
+            child: categoryItemsAppBar(isItGride),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: isItGride == false
+                ? categoryItemsInList()
+                : categoryItemsInGrid(),
+          )
+        ],
+      ),
+    );
   }
 }
