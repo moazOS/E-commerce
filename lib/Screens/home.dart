@@ -1,6 +1,8 @@
+import 'package:eco/Screens/filters.dart';
 import 'package:eco/components/categories.dart';
 import 'package:eco/components/productTwo.dart';
 import 'package:eco/data.dart';
+import 'package:eco/functions.dart';
 
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -25,7 +27,7 @@ class _HomeState extends State<Home> {
         child: currentNav == 0
             ? myHome()
             : currentNav == 1
-                ? categoryPage(title: categoryPageTitle)
+                ? categoryPage(title: categoryPageTitle, context: context)
                 : currentNav == 2
                     ? myBag()
                     : currentNav == 3
@@ -35,12 +37,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget categoryPage({String? title}) {
+  Widget categoryPage({String? title, required BuildContext context}) {
     return categoryPageIndex == 0
         ? myShop()
         : categoryPageIndex == 1
             ? chooseCategory(newCategory)
-            : categoryItems();
+            : categoryItems(context);
   }
 
   Widget myShop() {
@@ -440,7 +442,7 @@ class _HomeState extends State<Home> {
         ));
   }
 
-  Widget categoryItemsAppBar(bool check) {
+  Widget categoryItemsAppBar(bool check, BuildContext context) {
     return check == false
         ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
@@ -522,19 +524,197 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      goTo(context: context, NewScreen: FiltersScreen());
+                    },
                     child: const Row(
                       children: [
                         Icon(Icons.filter_list),
                         SizedBox(
                           width: 10,
                         ),
-                        Text("Filters")
+                        Text(
+                          "Filters",
+                        )
                       ],
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      showModalBottomSheet<void>(
+                        backgroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 416,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Sort by",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      popular = true;
+                                      newest = false;
+                                      customer_review = false;
+                                      Price_lowest_to_high = false;
+                                      Price_highest_to_low = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(20),
+                                    color: popular == true
+                                        ? const Color.fromARGB(255, 255, 17, 0)
+                                        : Colors.white,
+                                    child: Text(
+                                      "Popular",
+                                      style: TextStyle(
+                                          color: popular == true
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      popular = false;
+                                      popular = false;
+                                      newest = true;
+                                      customer_review = false;
+                                      Price_lowest_to_high = false;
+                                      Price_highest_to_low = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(20),
+                                    color: newest == true
+                                        ? const Color.fromARGB(255, 255, 17, 0)
+                                        : Colors.white,
+                                    child: Text(
+                                      "Newest",
+                                      style: TextStyle(
+                                          color: newest == true
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      popular = false;
+                                      popular = false;
+                                      newest = false;
+                                      customer_review = true;
+                                      Price_lowest_to_high = false;
+                                      Price_highest_to_low = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(20),
+                                    color: customer_review == true
+                                        ? const Color.fromARGB(255, 255, 17, 0)
+                                        : Colors.white,
+                                    child: Text(
+                                      "Customer review",
+                                      style: TextStyle(
+                                          color: customer_review == true
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      popular = false;
+                                      popular = false;
+                                      newest = false;
+                                      customer_review = false;
+                                      Price_lowest_to_high = true;
+                                      Price_highest_to_low = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(20),
+                                    color: Price_lowest_to_high == true
+                                        ? const Color.fromARGB(255, 255, 17, 0)
+                                        : Colors.white,
+                                    child: Text(
+                                      "Price: lowest to high",
+                                      style: TextStyle(
+                                          color: Price_lowest_to_high == true
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      popular = false;
+                                      popular = false;
+                                      newest = false;
+                                      customer_review = false;
+                                      Price_lowest_to_high = false;
+                                      Price_highest_to_low = true;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(20),
+                                    color: Price_highest_to_low == true
+                                        ? const Color.fromARGB(255, 255, 17, 0)
+                                        : Colors.white,
+                                    child: Text(
+                                      "Price: highest to low",
+                                      style: TextStyle(
+                                          color: Price_highest_to_low == true
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
                     child: Row(
                       children: [
                         Transform.rotate(
@@ -546,7 +726,7 @@ class _HomeState extends State<Home> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Text("Filters")
+                        Text("Sort")
                       ],
                     ),
                   ),
@@ -631,7 +811,16 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Scaffold.of(context)
+                          .showBottomSheet<void>((BuildContext context) {
+                        return Container(
+                          height: 200,
+                          color: Colors.amber,
+                          child: Text("hello"),
+                        );
+                      });
+                    },
                     child: const Row(
                       children: [
                         Icon(Icons.filter_list),
@@ -676,7 +865,7 @@ class _HomeState extends State<Home> {
     return SizedBox(
         height: 619.6,
         child: GridView(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               mainAxisExtent: 351, crossAxisCount: 2, crossAxisSpacing: 20),
           children: const [
             Product(
@@ -767,7 +956,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget categoryItems() {
+  Widget categoryItems(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -798,7 +987,7 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             width: double.infinity,
             decoration: const BoxDecoration(color: Colors.white),
-            child: categoryItemsAppBar(isItGride),
+            child: categoryItemsAppBar(isItGride, context),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
